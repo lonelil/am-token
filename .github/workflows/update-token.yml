@@ -9,6 +9,9 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update_token:
     runs-on: ubuntu-latest
