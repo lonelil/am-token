@@ -1,0 +1,39 @@
+name: Update Token
+on:
+  push:
+    paths:
+      - '.github/workflows/update-token.yml'
+  
+  schedule:
+  - cron: "0 0 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  update_token:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download and run script
+        env:
+          SCRIPT_URL: ${{ secrets.SCRIPT_URL }}
+        run: |
+          curl -o script.sh $SCRIPT_URL
+          chmod +x script.sh
+          ./script.sh
+
+      - name: Miscellaneous
+        run: |
+          echo `date +%s` > last-updated.txt
+          
+      - name: Push to GitHub 
+        run: |
+          git config user.name lonelil
+          git config user.email 51315646+lonelil@users.noreply.github.com
+          git add .
+          git commit -m "Update ($(date +'%Y-%m-%dT%H:%M:%S'))"
+          git push
+
